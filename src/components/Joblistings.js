@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import Filterbar from "./Filterbar";
 
 function Joblistings({ Data }) {
 
     const [jobList, setList] = useState([]);
+    const [selectCategory, setSelect] = useState({selected: false});
     const [category, setCategory] = useState(
         {
             role: '',
@@ -15,10 +17,24 @@ function Joblistings({ Data }) {
         setList(Data);
     }, []);
 
+    const removeCategories = () => {
+        setCategory({
+            role: '',
+            tool: '',
+            language: '',
+        })
+        setSelect({selected: false})
+    };
+
+    const filterBar = () => {
+        setSelect({...selectCategory, selected: true})
+    }
+
     const getFilteredList = () => {
         if (!category.role || !category.tool || !category.language) {
             return jobList;
         }
+        filterBar();
         return jobList.filter(prop => prop.tools.includes(category.tool) && prop.languages.includes(category.language) && prop.role === category.role);
     };
 
@@ -26,6 +42,7 @@ function Joblistings({ Data }) {
 
     return(
         <div>
+            {selectCategory.selected ? <Filterbar removeCategories={removeCategories} categories={category}/> : null}
             {filteredList.map(({logo, company, position, postedAt, contract, location, role, level, tools, languages, featured, newJob}, key) => {
                 return(
                     <div className={`sm:h-40 h-auto mt-6 shadow-lg shadow-cyan-100 rounded-lg relative ${featured === true ? "border-l-4 border-blue-400" : null}`} key={key}>
