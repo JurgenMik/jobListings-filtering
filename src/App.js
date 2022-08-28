@@ -1,24 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Joblistings from './components/Joblistings';
+import  data from './data.json';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="h-screen w-full">
+        <div className="h-36 w-full bg-pattern bg-blue-200">
+          <div className="sm:w-2/3 w-3/4 h-full mr-auto ml-auto pt-52">
+            <Joblistings Data={data}/>
+          </div>
+        </div>
+      </div>
   );
 }
 
