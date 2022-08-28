@@ -1,9 +1,32 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 function Joblistings({ Data }) {
+
+    const [jobList, setList] = useState([]);
+    const [category, setCategory] = useState(
+        {
+            role: '',
+            tool: '',
+            language: '',
+        }
+    );
+
+    useEffect(() => {
+        setList(Data);
+    }, []);
+
+    const getFilteredList = () => {
+        if (!category.role || !category.tool || !category.language) {
+            return jobList;
+        }
+        return jobList.filter(prop => prop.tools.includes(category.tool) && prop.languages.includes(category.language) && prop.role === category.role);
+    };
+
+    let filteredList = useMemo(getFilteredList, [category, jobList]);
+
     return(
         <div>
-            {Data.map(({logo, company, position, postedAt, contract, location, role, level, tools, languages, featured, newJob}, key) => {
+            {filteredList.map(({logo, company, position, postedAt, contract, location, role, level, tools, languages, featured, newJob}, key) => {
                 return(
                     <div className={`sm:h-40 h-auto mt-6 shadow-lg shadow-cyan-100 rounded-lg relative ${featured === true ? "border-l-4 border-blue-400" : null}`} key={key}>
                         <div className="grid sm:grid-cols-2 grid-cols-1 h-full">
@@ -31,7 +54,7 @@ function Joblistings({ Data }) {
                             </div>
                             <div className="flex flex-row text-blue-400 font-bold">
                                 <div className="flex flex-wrap sm:ml-auto ml-4 mr-10 sm:mt-0 mt-4 sm:pb-0 pb-4 sm:space-x-8 space-x-4">
-                                    <button className="hover:bg-" name="role">
+                                    <button onClick={e => setCategory({...category, role : e.target.innerHTML})} name="role">
                                         {role}
                                     </button>
                                     <button name="level">
@@ -39,14 +62,14 @@ function Joblistings({ Data }) {
                                     </button>
                                     {languages.map((language, indexLanguage) => {
                                         return(
-                                            <button name="languages" key={indexLanguage}>
+                                            <button onClick={e => setCategory({...category, language : e.target.innerHTML})} name="languages" key={indexLanguage}>
                                                 {language}
                                             </button>
                                         )
                                     })}
                                     {tools.map((tool, indexTool) => {
                                         return(
-                                            <button name="languages" key={indexTool}>
+                                            <button onClick={e => setCategory({...category, tool : e.target.innerHTML})} name="languages" key={indexTool}>
                                                 {tool}
                                             </button>
                                         )
